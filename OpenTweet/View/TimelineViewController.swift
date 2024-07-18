@@ -10,8 +10,7 @@ import UIKit
 import Combine
 
 class TimelineViewController: UIViewController {
-    
-    var viewModel: TimelineViewModel = TimelineViewModel()
+    var viewModel: TimeLineProtocol
     private var cancelBag: [AnyCancellable] = []
     
     private lazy var tableView: UITableView = {
@@ -25,11 +24,20 @@ class TimelineViewController: UIViewController {
 
 	override func viewDidLoad() {
 		super.viewDidLoad()
-        title = "OpenTweet"
+        title = viewModel.title
         setUpBinding()
         setUpTableView()
         fetchTimeline()
 	}
+    
+    init(viewModel: TimeLineProtocol) {
+        self.viewModel = viewModel
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
     
     private func setUpBinding() {
         viewModel.state.sink {[weak self] state in
@@ -52,6 +60,12 @@ class TimelineViewController: UIViewController {
     private func fetchTimeline() {
         viewModel.fetchTweets()
     }
+    
+    private func scrollToTweet(tweet: Tweet) {
+        guard let tweetIndex = viewModel.getIndexOfTweet(tweet: tweet) else { return }
+        let indexPath: IndexPath = .init(row: tweetIndex, section: 0)
+        tableView.scrollToRow(at: indexPath, at: .top, animated: false)
+    }
 }
 
 extension TimelineViewController: UITableViewDelegate, UITableViewDataSource {
@@ -62,10 +76,21 @@ extension TimelineViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         if let cell = tableView.dequeueReusableCell(withIdentifier: "TweetCell", for: indexPath) as? TweetCell {
             let tweet = viewModel.getAllTweets()[indexPath.row]
-            let tweetCellViewModel: TweetCellViewModel = .init(tweet: tweet)
+            let vm: TweetCellViewModel = .init(tweet: tweet)
+            let tweetCellViewModel: TweetCellViewModel = vm
             cell.viewModel = tweetCellViewModel
             return cell
         }
         assert(false, "unexpected element kind")
+    }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let tweet: Tweet = viewModel.getAllTweets()[indexPath.row]
+        let tweetThread: [Tweet] = viewModel.buildTweetThread(tweet: tweet)
+        let vm: TimelineReplyViewModel = TimelineReplyViewModel()
+        vm.mainTweet = tweet
+        vm.tweets = tweetThread
+        let vc = TimelineViewController(viewModel: vm)
+        navigationController?.pushViewController(vc, animated: true)
     }
 }

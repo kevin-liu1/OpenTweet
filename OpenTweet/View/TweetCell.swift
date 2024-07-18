@@ -15,15 +15,15 @@ class TweetCell: UITableViewCell {
             authorLabel.text = viewModel?.author
             dateLabel.text = viewModel?.date
             contentLabel.text = viewModel?.content
-            
-            if viewModel?.isAReplyTweet() == true {
-                leadingConstraint.isActive = false
-                replyLeadingConstraint.isActive = true
-            } else {
-                leadingConstraint.isActive = true
-                replyLeadingConstraint.isActive = false
-            }
             contentView.layoutIfNeeded()
+            
+            Task {
+                if let imageData = try await viewModel?.downloadImage() {
+                    DispatchQueue.main.async {
+                        self.avatarImage.image = UIImage(data: imageData)
+                    }
+                }
+            }
         }
     }
     override class func awakeFromNib() {
@@ -34,6 +34,17 @@ class TweetCell: UITableViewCell {
         let cardView = UIView()
         cardView.translatesAutoresizingMaskIntoConstraints = false
         return cardView
+    }()
+    
+    private lazy var avatarImage: UIImageView = {
+        let imageView = UIImageView()
+        imageView.contentMode = .scaleAspectFill
+        imageView.clipsToBounds = true
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        imageView.layer.cornerRadius = 12
+        imageView.image = UIImage(systemName: "person.fill")
+        imageView.tintColor = .gray
+        return imageView
     }()
     
     private lazy var authorLabel: UILabel = {
@@ -69,19 +80,31 @@ class TweetCell: UITableViewCell {
         stackView.alignment = .leading
         stackView.distribution = .fill
         stackView.spacing = 4
-        stackView.layoutMargins = UIEdgeInsets(top: 4, left: 16, bottom: 4, right: 16)
+//        stackView.layoutMargins = UIEdgeInsets(top: 4, left: 16, bottom: 4, right: 16)
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        stackView.isLayoutMarginsRelativeArrangement = true
+        return stackView
+    }()
+    
+    private lazy var stackView: UIStackView = {
+        let stackView: UIStackView = .init()
+        stackView.axis = .horizontal
+        stackView.alignment = .leading
+        stackView.distribution = .fill
+        stackView.spacing = 16
+        stackView.layoutMargins = UIEdgeInsets(top: 8, left: 16, bottom: 8, right: 16)
         stackView.translatesAutoresizingMaskIntoConstraints = false
         stackView.isLayoutMarginsRelativeArrangement = true
         return stackView
     }()
     
     private lazy var leadingConstraint: NSLayoutConstraint = {
-        let constraint = NSLayoutConstraint(item: textStackView, attribute: .leading, relatedBy: .equal, toItem: cardView, attribute: .leading, multiplier: 1, constant: 0)
+        let constraint = NSLayoutConstraint(item: stackView, attribute: .leading, relatedBy: .equal, toItem: cardView, attribute: .leading, multiplier: 1, constant: 0)
         return constraint
     }()
     
     private lazy var replyLeadingConstraint: NSLayoutConstraint = {
-        let constraint = NSLayoutConstraint(item: textStackView, attribute: .leading, relatedBy: .equal, toItem: cardView, attribute: .leading, multiplier: 1, constant: 16)
+        let constraint = NSLayoutConstraint(item: stackView, attribute: .leading, relatedBy: .equal, toItem: cardView, attribute: .leading, multiplier: 1, constant: 16)
         return constraint
     }()
     
@@ -99,7 +122,9 @@ class TweetCell: UITableViewCell {
         textStackView.addArrangedSubview(dateLabel)
         textStackView.addArrangedSubview(contentLabel)
         textStackView.addArrangedSubview(UIView())
-        contentView.addSubview(textStackView)
+        stackView.addArrangedSubview(avatarImage)
+        stackView.addArrangedSubview(textStackView)
+        contentView.addSubview(stackView)
         contentView.addSubview(cardView)
         setUpConstraints()
     }
@@ -107,15 +132,16 @@ class TweetCell: UITableViewCell {
     private func setUpConstraints() {
         
         NSLayoutConstraint.activate([
-            //textStackView.leadingAnchor.constraint(equalTo: cardView.leadingAnchor, constant: leadingConstraint),
             leadingConstraint,
-            textStackView.trailingAnchor.constraint(equalTo: cardView.trailingAnchor),
-            textStackView.topAnchor.constraint(equalTo: cardView.topAnchor),
-            textStackView.bottomAnchor.constraint(equalTo: cardView.bottomAnchor),
+            stackView.trailingAnchor.constraint(equalTo: cardView.trailingAnchor),
+            stackView.topAnchor.constraint(equalTo: cardView.topAnchor),
+            stackView.bottomAnchor.constraint(equalTo: cardView.bottomAnchor),
             cardView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
             cardView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
             cardView.topAnchor.constraint(equalTo: contentView.topAnchor),
-            cardView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor)
+            cardView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor),
+            avatarImage.heightAnchor.constraint(equalToConstant: 40),
+            avatarImage.widthAnchor.constraint(equalToConstant: 40)
         ])
     }
 }
