@@ -15,5 +15,7 @@ class TimelineReplyViewModel: TimeLineProtocol {
     var state = PassthroughSubject<State, Never>()
     var tweets: [Tweet] = []
     
-    func fetchTweets() {}
+    func fetchTweets() {
+        state.send(.complete)
+    }
 }

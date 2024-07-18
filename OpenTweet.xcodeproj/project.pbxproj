@@ -26,7 +26,10 @@
 		BEA0EA772C48C1E200BD88F9 /* RequestProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = BEA0EA762C48C1E200BD88F9 /* RequestProtocol.swift */; };
 		BEA0EA792C48C2A600BD88F9 /* ImageRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = BEA0EA782C48C2A600BD88F9 /* ImageRequest.swift */; };
 		BEA0EA7B2C48C46500BD88F9 /* CacheManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = BEA0EA7A2C48C46500BD88F9 /* CacheManager.swift */; };
-		BEA0EA7E2C49753600BD88F9 /* DateFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = BEA0EA7D2C49753600BD88F9 /* DateFormatter.swift */; };
+		BEA0EA7E2C49753600BD88F9 /* DateFormat.swift in Sources */ = {isa = PBXBuildFile; fileRef = BEA0EA7D2C49753600BD88F9 /* DateFormat.swift */; };
+		BEA0EA802C4979C000BD88F9 /* StringFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = BEA0EA7F2C4979C000BD88F9 /* StringFormatter.swift */; };
+		BEA0EA822C499B7B00BD88F9 /* State.swift in Sources */ = {isa = PBXBuildFile; fileRef = BEA0EA812C499B7B00BD88F9 /* State.swift */; };
+		BEA0EA842C499BB700BD88F9 /* TimelineProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = BEA0EA832C499BB700BD88F9 /* TimelineProtocol.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -73,7 +76,10 @@
 		BEA0EA762C48C1E200BD88F9 /* RequestProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RequestProtocol.swift; sourceTree = "<group>"; };
 		BEA0EA782C48C2A600BD88F9 /* ImageRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageRequest.swift; sourceTree = "<group>"; };
 		BEA0EA7A2C48C46500BD88F9 /* CacheManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CacheManager.swift; sourceTree = "<group>"; };
-		BEA0EA7D2C49753600BD88F9 /* DateFormatter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateFormatter.swift; sourceTree = "<group>"; };
+		BEA0EA7D2C49753600BD88F9 /* DateFormat.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateFormat.swift; sourceTree = "<group>"; };
+		BEA0EA7F2C4979C000BD88F9 /* StringFormatter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StringFormatter.swift; sourceTree = "<group>"; };
+		BEA0EA812C499B7B00BD88F9 /* State.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = State.swift; sourceTree = "<group>"; };
+		BEA0EA832C499BB700BD88F9 /* TimelineProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimelineProtocol.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -178,6 +184,7 @@
 		BEA0EA5C2C4858C400BD88F9 /* View Model */ = {
 			isa = PBXGroup;
 			children = (
+				BEA0EA832C499BB700BD88F9 /* TimelineProtocol.swift */,
 				BEA0EA652C485DBB00BD88F9 /* TimelineViewModel.swift */,
 				BEA0EA6F2C48758800BD88F9 /* TimelineReplyViewModel.swift */,
 				BEA0EA6D2C48623E00BD88F9 /* TweetCellViewModel.swift */,
@@ -209,7 +216,9 @@
 		BEA0EA7C2C4974B400BD88F9 /* Common */ = {
 			isa = PBXGroup;
 			children = (
-				BEA0EA7D2C49753600BD88F9 /* DateFormatter.swift */,
+				BEA0EA7D2C49753600BD88F9 /* DateFormat.swift */,
+				BEA0EA7F2C4979C000BD88F9 /* StringFormatter.swift */,
+				BEA0EA812C499B7B00BD88F9 /* State.swift */,
 			);
 			path = Common;
 			sourceTree = "<group>";
@@ -360,9 +369,12 @@
 				BEA0EA7B2C48C46500BD88F9 /* CacheManager.swift in Sources */,
 				BEA0EA642C485D3B00BD88F9 /* DataParser.swift in Sources */,
 				BEA0EA732C48C1D000BD88F9 /* RequestManager.swift in Sources */,
-				BEA0EA7E2C49753600BD88F9 /* DateFormatter.swift in Sources */,
+				BEA0EA7E2C49753600BD88F9 /* DateFormat.swift in Sources */,
 				BEA0EA792C48C2A600BD88F9 /* ImageRequest.swift in Sources */,
+				BEA0EA802C4979C000BD88F9 /* StringFormatter.swift in Sources */,
 				BEA0EA702C48758800BD88F9 /* TimelineReplyViewModel.swift in Sources */,
+				BEA0EA822C499B7B00BD88F9 /* State.swift in Sources */,
+				BEA0EA842C499BB700BD88F9 /* TimelineProtocol.swift in Sources */,
 				BEA0EA5F2C4858E300BD88F9 /* Tweet.swift in Sources */,
 				009C4C6E1D9F0CD600F0BC6C /* TimelineViewController.swift in Sources */,
 				009C4C6C1D9F0CD600F0BC6C /* AppDelegate.swift in Sources */,

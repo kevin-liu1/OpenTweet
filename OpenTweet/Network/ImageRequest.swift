@@ -9,7 +9,6 @@
 import Foundation
 
 enum ImageRequest: RequestProtocol {
-    
     case fetchImage(url: String)
     
     var urlString: String {
@@ -29,5 +28,4 @@ enum ImageRequest: RequestProtocol {
     var requestType: RequestType {
         .GET
     }
-    
 }

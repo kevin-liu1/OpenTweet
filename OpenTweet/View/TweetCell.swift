@@ -14,7 +14,7 @@ class TweetCell: UITableViewCell {
         didSet {
             authorLabel.text = viewModel?.author
             dateLabel.text = viewModel?.date
-            contentLabel.text = viewModel?.content
+            contentLabel.attributedText = viewModel?.content
             contentView.layoutIfNeeded()
             
             Task {
@@ -26,9 +26,14 @@ class TweetCell: UITableViewCell {
             }
         }
     }
-    override class func awakeFromNib() {
-        
+    
+    var isFloatingEnabled: Bool = false {
+        didSet {
+            updateFloatingAppearance()
+        }
     }
+    
+    override class func awakeFromNib() {}
     
     private lazy var cardView: UIView = {
         let cardView = UIView()
@@ -49,7 +54,7 @@ class TweetCell: UITableViewCell {
     
     private lazy var authorLabel: UILabel = {
        let label = UILabel()
-        label.font = UIFont.boldSystemFont(ofSize: 16)
+        label.font = UIFont.boldSystemFont(ofSize: 14)
         label.textAlignment = .left
         label.numberOfLines = 1
         label.translatesAutoresizingMaskIntoConstraints = false
@@ -58,7 +63,7 @@ class TweetCell: UITableViewCell {
     
     private lazy var dateLabel: UILabel = {
        let label = UILabel()
-        label.font = UIFont.boldSystemFont(ofSize: 12)
+        label.font = UIFont.systemFont(ofSize: 12)
         label.textAlignment = .left
         label.numberOfLines = 1
         label.translatesAutoresizingMaskIntoConstraints = false
@@ -67,7 +72,7 @@ class TweetCell: UITableViewCell {
     
     private lazy var contentLabel: UILabel = {
        let label = UILabel()
-        label.font = UIFont.boldSystemFont(ofSize: 12)
+        label.font = UIFont.systemFont(ofSize: 12)
         label.textAlignment = .left
         label.translatesAutoresizingMaskIntoConstraints = false
         label.numberOfLines = 0
@@ -80,7 +85,6 @@ class TweetCell: UITableViewCell {
         stackView.alignment = .leading
         stackView.distribution = .fill
         stackView.spacing = 4
-//        stackView.layoutMargins = UIEdgeInsets(top: 4, left: 16, bottom: 4, right: 16)
         stackView.translatesAutoresizingMaskIntoConstraints = false
         stackView.isLayoutMarginsRelativeArrangement = true
         return stackView
@@ -143,5 +147,30 @@ class TweetCell: UITableViewCell {
             avatarImage.heightAnchor.constraint(equalToConstant: 40),
             avatarImage.widthAnchor.constraint(equalToConstant: 40)
         ])
+    }
+    
+    private func updateFloatingAppearance() {
+        if isFloatingEnabled {
+            // Configure cell appearance with floating effect
+            layer.cornerRadius = 12
+            layer.masksToBounds = false
+            contentView.clipsToBounds = true
+            backgroundColor = .white
+            
+            layer.shadowColor = UIColor.black.cgColor
+            layer.shadowOffset = CGSize(width: 0, height: 0)
+            layer.shadowOpacity = 0.4
+            layer.shadowRadius = 2
+        } else {
+            // Remove floating effect
+            layer.cornerRadius = 0
+            layer.masksToBounds = true
+            backgroundColor = .clear
+            
+            layer.shadowColor = nil
+            layer.shadowOffset = CGSize.zero
+            layer.shadowOpacity = 0
+            layer.shadowRadius = 0
+        }
     }
 }

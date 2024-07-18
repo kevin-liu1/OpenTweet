@@ -45,7 +45,12 @@ class TimelineViewController: UIViewController {
             case .loading:
                 break
             case .complete:
-                self?.tableView.reloadData()
+                DispatchQueue.main.async {
+                    self?.tableView.reloadData()
+                    if let mainTweet = self?.viewModel.mainTweet {
+                        self?.scrollToTweet(tweet: mainTweet)
+                    }
+                }
             }
         }.store(in: &cancelBag)
     }
@@ -79,13 +84,21 @@ extension TimelineViewController: UITableViewDelegate, UITableViewDataSource {
             let vm: TweetCellViewModel = .init(tweet: tweet)
             let tweetCellViewModel: TweetCellViewModel = vm
             cell.viewModel = tweetCellViewModel
+            if tweet.id == viewModel.mainTweet?.id {
+                cell.isFloatingEnabled = true
+            } else {
+                cell.isFloatingEnabled = false
+            }
             return cell
         }
         assert(false, "unexpected element kind")
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tableView.deselectRow(at: indexPath, animated: true)
         let tweet: Tweet = viewModel.getAllTweets()[indexPath.row]
+        guard tweet.id != viewModel.mainTweet?.id else { return }
+        
         let tweetThread: [Tweet] = viewModel.buildTweetThread(tweet: tweet)
         let vm: TimelineReplyViewModel = TimelineReplyViewModel()
         vm.mainTweet = tweet
